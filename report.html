@@ -3,1190 +3,628 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ML予測レポート</title>
+<title>株式予測レポート — 2026/04/20 15:17</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Hiragino Sans', 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; }
-  a { color: #58a6ff; text-decoration: none; }
-  h1 { color: #58a6ff; font-size: 22px; margin: 20px 0 8px; border-bottom: 1px solid #30363d; padding-bottom: 8px; }
-  h2 { color: #e6edf3; font-size: 18px; margin: 24px 0 8px; border-left: 3px solid #58a6ff; padding-left: 10px; }
-  h3 { color: #e3b341; font-size: 15px; margin: 18px 0 6px; }
-  h4 { color: #8b949e; font-size: 13px; margin: 12px 0 4px; }
-  p { margin: 6px 0; font-size: 14px; }
-  li { margin: 4px 0 4px 20px; font-size: 14px; }
-  strong { color: #58a6ff; }
-  code { background: #21262d; padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: monospace; }
-  pre.code { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; }
-  pre.code code { background: none; padding: 0; font-size: 12px; }
-  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
-  th, td { padding: 7px 12px; border: 1px solid #30363d; text-align: left; }
-  th { background: #21262d; color: #8b949e; }
-  tr:hover { background: #1c2128; }
-  blockquote { border-left: 3px solid #e3b341; padding: 8px 12px; color: #e3b341; background: #2d2208; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; }
-  hr { border: none; border-top: 1px solid #30363d; margin: 20px 0; }
-  details { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 8px 12px; margin: 8px 0; }
-  summary { cursor: pointer; color: #58a6ff; font-size: 13px; }
-  .back-btn { display: inline-block; margin-bottom: 16px; padding: 6px 14px; background: #21262d; border-radius: 6px; color: #8b949e; font-size: 13px; }
-  .back-btn:hover { color: #e6edf3; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 24px 16px;
+}
+a { color: #58a6ff; text-decoration: none; }
+h1 { font-size: 22px; color: #58a6ff; margin-bottom: 4px; }
+h2 { font-size: 17px; color: #79c0ff; margin: 28px 0 12px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+h3 { font-size: 15px; color: #e6edf3; margin-bottom: 8px; }
+.subtitle { color: #8b949e; font-size: 13px; margin-bottom: 24px; }
+.container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+/* カード */
+.card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+/* テーブル */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #21262d; color: #8b949e; padding: 8px; text-align: left; }
+td { padding: 8px; border-bottom: 1px solid #21262d; }
+tr:hover td { background: #1c2128; }
+/* スコアバー */
+.prob-bar-wrap { background: #21262d; border-radius: 4px; height: 8px; width: 100%; }
+.prob-bar-fill { height: 8px; border-radius: 4px; }
+/* 警告ハイライト */
+.warn-box {
+  background: #2d2300;
+  border: 1px solid #d29922;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #d29922;
+  margin-top: 8px;
+}
+/* exec タグ */
+.exec-tag {
+  font-size: 15px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 6px;
+  display: inline-block;
+  margin: 6px 0;
+}
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .card-grid { grid-template-columns: 1fr; }
+  body { font-size: 13px; }
+}
+/* ピル */
+.pill {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  border: 1px solid #30363d;
+  margin-right: 4px;
+}
+/* 箇条書き */
+ul.reasons { padding-left: 18px; margin-top: 6px; }
+ul.reasons li { font-size: 12px; color: #8b949e; margin-bottom: 2px; }
+/* セクション区切り */
+.section-note {
+  background: #0d1117;
+  border-left: 3px solid #58a6ff;
+  padding: 8px 12px;
+  margin: 12px 0;
+  font-size: 12px;
+  color: #8b949e;
+}
 </style>
 </head>
 <body>
-<a href="index.html" class="back-btn">← トップへ</a>
-<h1>株式予測レポート — 2026/04/20 15:09</h1>
-<br>
-<blockquote>⚠️ このレポートは機械的な参考情報です。投資判断は自己責任でお願いします。</blockquote>
-<br>
-<h2>市場環境</h2>
-<br>
-<pre class="code yaml"><code>
-date: '2026-04-20'
-market_regime:
-  spx_above_20dma: true
-  spx_change_5d_pct: 4.52
-  ndx_above_20dma: true
-  vix: 17.48
-  us10y_change_5d: -0.071
-  usdjpy_change_5d_pct: -0.5%
-  sox_change_20d_pct: 22.2
-stocks:
-- ticker: 8035.T
-  close: 44010.0
-  change_1d_pct: -4.0%
-  change_5d_pct: -0.1%
-  change_20d_pct: +12.9%
-  volume_vs_20d: 0.95
-  rsi_14: 58.7
-  atr_pct: 4.0%
-  dist_from_20dma: +8.3%
-  dist_from_50dma: +7.3%
-  setup: range_middle
-  prob_up_3d: 0.738
-  confidence: high
-  earnings_date: '2026-04-30'
-- ticker: 9984.T
-  close: 4527.0
-  change_1d_pct: -3.1%
-  change_5d_pct: +19.8%
-  change_20d_pct: +27.4%
-  volume_vs_20d: 0.87
-  rsi_14: 64.6
-  atr_pct: 5.5%
-  dist_from_20dma: +17.5%
-  dist_from_50dma: +14.2%
-  setup: overbought_risk
-  prob_up_3d: 0.709
-  confidence: high
-  earnings_date: '2026-05-13'
-- ticker: TSLA
-  close: 400.62
-  change_1d_pct: +3.0%
-  change_5d_pct: +14.8%
-  change_20d_pct: +5.3%
-  volume_vs_20d: 1.29
-  rsi_14: 60.3
-  atr_pct: 4.2%
-  dist_from_20dma: +8.9%
-  dist_from_50dma: +2.6%
-  setup: earnings_event_risk
-  prob_up_3d: 0.639
-  confidence: low
-  earnings_date: '2026-04-23'
-  earnings_nearby: true
-- ticker: 6954.T
-  close: 6228.0
-  change_1d_pct: -1.7%
-  change_5d_pct: -0.3%
-  change_20d_pct: +4.9%
-  volume_vs_20d: 0.77
-  rsi_14: 55.7
-  atr_pct: 3.4%
-  dist_from_20dma: +6.8%
-  dist_from_50dma: +0.5%
-  setup: earnings_event_risk
-  prob_up_3d: 0.63
-  confidence: low
-  earnings_date: '2026-04-24'
-  earnings_nearby: true
-- ticker: 6098.T
-  close: 7524.0
-  change_1d_pct: +3.4%
-  change_5d_pct: +5.7%
-  change_20d_pct: +19.1%
-  volume_vs_20d: 1.19
-  rsi_14: 64.8
-  atr_pct: 3.2%
-  dist_from_20dma: +9.4%
-  dist_from_50dma: +11.7%
-  setup: overbought_risk
-  prob_up_3d: 0.629
-  confidence: medium
-  earnings_date: '2026-05-15'
-- ticker: SMCI
-  close: 28.56
-  change_1d_pct: +0.6%
-  change_5d_pct: +13.1%
-  change_20d_pct: -7.2%
-  volume_vs_20d: 0.43
-  rsi_14: 58.9
-  atr_pct: 5.4%
-  dist_from_20dma: +20.0%
-  dist_from_50dma: +0.1%
-  setup: overbought_risk
-  prob_up_3d: 0.628
-  confidence: medium
-  earnings_date: '2026-05-06'
-- ticker: 8306.T
-  close: 2870.0
-  change_1d_pct: -2.6%
-  change_5d_pct: +1.0%
-  change_20d_pct: +8.4%
-  volume_vs_20d: 1.03
-  rsi_14: 56.6
-  atr_pct: 2.6%
-  dist_from_20dma: +3.8%
-  dist_from_50dma: +3.2%
-  setup: range_middle
-  prob_up_3d: 0.619
-  confidence: medium
-  earnings_date: '2026-05-15'
-- ticker: 2413.T
-  close: 1578.5
-  change_1d_pct: -0.0%
-  change_5d_pct: -1.3%
-  change_20d_pct: -1.8%
-  volume_vs_20d: 1.38
-  rsi_14: 42.9
-  atr_pct: 3.3%
-  dist_from_20dma: -1.9%
-  dist_from_50dma: -3.5%
-  setup: range_middle
-  prob_up_3d: 0.618
-  confidence: low
-  earnings_date: '2026-05-01'
-- ticker: 4063.T
-  close: 6907.0
-  change_1d_pct: -0.0%
-  change_5d_pct: +5.3%
-  change_20d_pct: +9.3%
-  volume_vs_20d: 0.92
-  rsi_14: 68.3
-  atr_pct: 2.9%
-  dist_from_20dma: +7.0%
-  dist_from_50dma: +13.2%
-  setup: overbought_risk
-  prob_up_3d: 0.602
-  confidence: high
-  earnings_date: '2026-04-28'
-- ticker: 6367.T
-  close: 21315.0
-  change_1d_pct: -3.5%
-  change_5d_pct: +3.3%
-  change_20d_pct: +11.0%
-  volume_vs_20d: 1.16
-  rsi_14: 59.9
-  atr_pct: 4.0%
-  dist_from_20dma: +7.0%
-  dist_from_50dma: +9.2%
-  setup: overbought_risk
-  prob_up_3d: 0.575
-  confidence: medium
-  earnings_date: '2026-05-12'
-- ticker: 9983.T
-  close: 74050.0
-  change_1d_pct: -1.1%
-  change_5d_pct: -2.0%
-  change_20d_pct: +16.7%
-  volume_vs_20d: 0.86
-  rsi_14: 70.5
-  atr_pct: 3.0%
-  dist_from_20dma: +10.7%
-  dist_from_50dma: +11.8%
-  setup: trend_pullback
-  prob_up_3d: 0.574
-  confidence: medium
-  earnings_date: '2026-07-09'
-- ticker: 6758.T
-  close: 3395.0
-  change_1d_pct: -0.3%
-  change_5d_pct: +2.1%
-  change_20d_pct: +4.2%
-  volume_vs_20d: 1.01
-  rsi_14: 54.5
-  atr_pct: 2.5%
-  dist_from_20dma: +3.1%
-  dist_from_50dma: +0.8%
-  setup: range_middle
-  prob_up_3d: 0.568
-  confidence: medium
-  earnings_date: '2026-05-08'
-- ticker: META
-  close: 688.55
-  change_1d_pct: +1.7%
-  change_5d_pct: +9.3%
-  change_20d_pct: +13.5%
-  volume_vs_20d: 0.88
-  rsi_14: 69.8
-  atr_pct: 2.9%
-  dist_from_20dma: +14.1%
-  dist_from_50dma: +9.4%
-  setup: overbought_risk
-  prob_up_3d: 0.567
-  confidence: medium
-  earnings_date: '2026-04-30'
-- ticker: 7974.T
-  close: 8615.0
-  change_1d_pct: +3.5%
-  change_5d_pct: +3.8%
-  change_20d_pct: -10.1%
-  volume_vs_20d: 1.17
-  rsi_14: 46.7
-  atr_pct: 3.0%
-  dist_from_20dma: -0.9%
-  dist_from_50dma: -1.9%
-  setup: range_middle
-  prob_up_3d: 0.56
-  confidence: low
-  earnings_date: '2026-05-08'
-- ticker: NVDA
-  close: 201.68
-  change_1d_pct: +1.7%
-  change_5d_pct: +6.9%
-  change_20d_pct: +12.9%
-  volume_vs_20d: 0.98
-  rsi_14: 71.4
-  atr_pct: 2.4%
-  dist_from_20dma: +11.2%
-  dist_from_50dma: +10.0%
-  setup: overbought_risk
-  prob_up_3d: 0.56
-  confidence: medium
-  earnings_date: '2026-05-21'
-- ticker: AMD
-  close: 278.39
-  change_1d_pct: +0.1%
-  change_5d_pct: +13.6%
-  change_20d_pct: +35.6%
-  volume_vs_20d: 0.99
-  rsi_14: 80.2
-  atr_pct: 3.7%
-  dist_from_20dma: +22.8%
-  dist_from_50dma: +31.2%
-  setup: overbought_risk
-  prob_up_3d: 0.554
-  confidence: medium
-  earnings_date: '2026-05-06'
-- ticker: COIN
-  close: 206.33
-  change_1d_pct: +3.2%
-  change_5d_pct: +22.9%
-  change_20d_pct: +1.7%
-  volume_vs_20d: 1.41
-  rsi_14: 64.3
-  atr_pct: 5.8%
-  dist_from_20dma: +14.7%
-  dist_from_50dma: +14.5%
-  setup: overbought_risk
-  prob_up_3d: 0.545
-  confidence: medium
-  earnings_date: '2026-05-08'
-- ticker: GOOGL
-  close: 341.68
-  change_1d_pct: +1.7%
-  change_5d_pct: +7.7%
-  change_20d_pct: +11.2%
-  volume_vs_20d: 0.87
-  rsi_14: 72.6
-  atr_pct: 2.3%
-  dist_from_20dma: +11.6%
-  dist_from_50dma: +11.0%
-  setup: overbought_risk
-  prob_up_3d: 0.481
-  confidence: medium
-  earnings_date: '2026-04-30'
-- ticker: 6861.T
-  close: 62810.0
-  change_1d_pct: -0.3%
-  change_5d_pct: +0.6%
-  change_20d_pct: +6.3%
-  volume_vs_20d: 0.82
-  rsi_14: 60.4
-  atr_pct: 2.6%
-  dist_from_20dma: +6.0%
-  dist_from_50dma: +5.6%
-  setup: earnings_event_risk
-  prob_up_3d: 0.464
-  confidence: low
-  earnings_date: '2026-04-24'
-  earnings_nearby: true
-- ticker: 7203.T
-  close: 3343.0
-  change_1d_pct: -1.4%
-  change_5d_pct: +0.7%
-  change_20d_pct: +2.0%
-  volume_vs_20d: 0.72
-  rsi_14: 49.6
-  atr_pct: 2.4%
-  dist_from_20dma: +1.4%
-  dist_from_50dma: -3.3%
-  setup: range_middle
-  prob_up_3d: 0.431
-  confidence: medium
-  earnings_date: '2026-05-08'
-- ticker: 3382.T
-  close: 2054.5
-  change_1d_pct: +1.0%
-  change_5d_pct: +1.4%
-  change_20d_pct: -0.5%
-  volume_vs_20d: 0.92
-  rsi_14: 45.3
-  atr_pct: 3.0%
-  dist_from_20dma: -2.2%
-  dist_from_50dma: -4.0%
-  setup: range_middle
-  prob_up_3d: 0.391
-  confidence: high
-  earnings_date: '2026-07-09'
-- ticker: AMZN
-  close: 250.56
-  change_1d_pct: +0.3%
-  change_5d_pct: +5.1%
-  change_20d_pct: +20.0%
-  volume_vs_20d: 1.1
-  rsi_14: 76.6
-  atr_pct: 2.7%
-  dist_from_20dma: +13.2%
-  dist_from_50dma: +16.9%
-  setup: overbought_risk
-  prob_up_3d: 0.384
-  confidence: medium
-  earnings_date: '2026-04-30'
-- ticker: AAPL
-  close: 270.23
-  change_1d_pct: +2.6%
-  change_5d_pct: +3.7%
-  change_20d_pct: +8.5%
-  volume_vs_20d: 1.39
-  rsi_14: 64.2
-  atr_pct: 2.4%
-  dist_from_20dma: +5.4%
-  dist_from_50dma: +3.7%
-  setup: overbought_risk
-  prob_up_3d: 0.338
-  confidence: medium
-  earnings_date: '2026-05-01'
-- ticker: MSFT
-  close: 422.79
-  change_1d_pct: +0.6%
-  change_5d_pct: +14.0%
-  change_20d_pct: +8.7%
-  volume_vs_20d: 1.35
-  rsi_14: 71.7
-  atr_pct: 2.5%
-  dist_from_20dma: +11.3%
-  dist_from_50dma: +7.8%
-  setup: overbought_risk
-  prob_up_3d: 0.298
-  confidence: medium
-  earnings_date: '2026-04-30'
-- ticker: 9432.T
-  close: 154.0
-  change_1d_pct: +0.7%
-  change_5d_pct: +0.6%
-  change_20d_pct: -1.2%
-  volume_vs_20d: 0.85
-  rsi_14: 49.8
-  atr_pct: 1.2%
-  dist_from_20dma: -0.7%
-  dist_from_50dma: +0.9%
-  setup: range_middle
-  prob_up_3d: 0.174
-  confidence: medium
-  earnings_date: '2026-05-08'
-</code></pre>
-<br>
-<h2>買い候補 TOP10</h2>
-<br>
-<h3>1. 8035.T — 東京エレクトロン</h3>
-<p><strong>セットアップ</strong>: レンジ中間 | <strong>信頼度</strong>: ★★★ | <strong>モデルAUC</strong>: 0.804</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>44,010.0</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[██████████████░░░░░░] 74%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[██████████░░░░░░░░░░] 53%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[███████████░░░░░░░░░] 58%</th></tr>
-<tr><td>期待リターン</td><td>+2.05%</td></tr>
-<tr><td>期待ドローダウン</td><td>-2.89%</td></tr>
-<tr><td>RSI (14)</td><td>58.7</td></tr>
-<tr><th>ATR (%)</th><th>4.0%</th></tr>
-<tr><td>20日線乖離</td><td>+8.3%</td></tr>
-<tr><td>出来高比</td><td>0.95x</td></tr>
+<div class="container">
+<h1>株式予測レポート</h1>
+<p class="subtitle">生成日時: 2026/04/20 15:17 | 予測銘柄数: 25 | データソース: Yahoo Finance</p>
+<h2>モデル成績サマリー</h2>
+<div class="card">
+<h3>モデル成績サマリー</h3>
+<p class="section-note">prob_up_3d = 「3日以内にTP+2%がSL-2%より先着する確率」<br>
+学習方式: ウォークフォワード（訓練252日 / テスト42日）</p>
+<table style="margin-bottom:12px">
+<tr><th colspan="2">全銘柄 OOF 集計 (prob >= 0.50)</th></tr>
+<tr><td style="color:#8b949e;width:140px">シグナル数</td><td style="">1675</td></tr>
+<tr><td style="color:#8b949e;width:140px">勝率</td><td style="">53.5%</td></tr>
+<tr><td style="color:#8b949e;width:140px">平均リターン</td><td style="">+0.2%</td></tr>
+<tr><td style="color:#8b949e;width:140px">プロフィットF</td><td style="">1.09</td></tr>
 </table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 5日線タッチ or 20日線上での方向感確認後</p>
-<p><strong>無効化条件</strong>: 直近安値 or -1ATR(4.0%)</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
+<table style="margin-bottom:12px">
+<tr><th>閾値</th><th>シグナル数</th><th>勝率</th><th>平均リターン</th><th>PF</th></tr>
+<tr><td>prob &ge; 0.60</td><td>582</td><td>58.1%</td><td>+0.2%</td><td>1.09</td></tr>
+<tr><td>prob &ge; 0.65</td><td>295</td><td>64.1%</td><td>+0.4%</td><td>1.18</td></tr>
+<tr><td>prob &ge; 0.70</td><td>103</td><td>68.9%</td><td>+1.9%</td><td>2.11</td></tr>
+</table>
+<h3 style="margin-top:12px">キャリブレーション（予測確率帯 vs 実勝率）</h3>
+<table>
+<tr><th>予測確率帯</th><th>サンプル数</th><th>実勝率</th><th>平均リターン</th></tr>
+<tr><td>0.00-0.17</td><td>49</td><td style="color:#f85149">16.3%</td><td>+0.1%</td></tr>
+<tr><td>0.17-0.33</td><td>529</td><td style="color:#f85149">33.5%</td><td>-0.1%</td></tr>
+<tr><td>0.33-0.50</td><td>1492</td><td style="color:#d29922">47.9%</td><td>+0.5%</td></tr>
+<tr><td>0.50-0.67</td><td>1449</td><td style="color:#d29922">51.7%</td><td>+0.1%</td></tr>
+<tr><td>0.67-0.83</td><td>226</td><td style="color:#3fb950">65.0%</td><td>+0.8%</td></tr>
+</table>
+</div>
+<h2>市場地合いサマリー</h2>
+<div class="card">
+<h3>市場地合いサマリー</h3>
+<p style="margin-bottom:12px;color:#c9d1d9">VIX は中程度で、市場は比較的落ち着いている。 S&amp;P500 は直近5日で4.5%上昇し地合いは強い。 半導体（SOX）が20日で22.2%上昇し市場をリード。AI・半導体関連に強い追い風。 有利なセットアップ: trend_pullback（押し目）・breakout_ready（ブレイク前夜）。</p>
+<table>
+<tr><th>指標</th><th>現在値</th><th>変化率（5日）</th></tr>
+<tr><td>VIX</td><td>17.48</td><td>—</td></tr>
+<tr><td>US10Y</td><td>4.25</td><td>—</td></tr>
+<tr><td>USD/JPY</td><td>158.84</td><td><span style="color:#f85149">-0.5%</span></td></tr>
+<tr><td>SPY</td><td>710.14</td><td><span style="color:#3fb950">+4.5%</span></td></tr>
+<tr><td>SOX</td><td>415.71</td><td><span style="color:#3fb950">+22.2%</span></td></tr>
+</table>
+</div>
+<h2>買い候補 TOP15（composite_score 降順 / 決算近接除外）</h2>
+<div class="card-grid">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#1</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">8035.T</span> <span style="color:#8b949e">東京エレクトロン</span></div>
+<div><span class="pill" style="color:#58a6ff;border-color:#58a6ff40">レンジ中間（方向感なし）</span> <span class="badge" style="background:#3fb95020;color:#3fb950;border:1px solid #3fb950">信頼度 高</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">20日線乖離8.3%・RSI=59と方向感に乏しい。明確なブレイクを待つ。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">74%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:74%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">26%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:26%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">+2.1%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-2.9%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.71x</span></div></div>
+<span class="exec-tag" style="background:#79c0ff22;color:#79c0ff;border:1px solid #79c0ff40">5日線まで待つ</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">5日線タッチ or 20日線上での方向感確認後</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">直近安値 or -1ATR(4.0%)</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">直近高値 or +6.1%</td></tr>
+</table>
+<p style="font-size:12px;margin-top:8px"><span style="color:#d29922">⚠ 無効化条件: </span>直近安値 or -1ATR(4.0%)</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.804 — モデル精度が高い、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい</p>
+<ul class="reasons">
 <li>20日線を8.3%上回りトレンド継続中</li>
 <li>50日線からも7.3%上方（長期上昇継続）</li>
 <li>MACDヒストグラム陽転（短期上昇モメンタム）</li>
-<li>S&P500が5日で4.5%上昇 — 地合い良好</li>
+<li>S&amp;P500が5日で4.5%上昇 — 地合い良好</li>
 <li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "8035.T",
-  "horizon": "3d",
-  "close": 44010.0,
-  "prob_up": 0.738,
-  "prob_down": 0.262,
-  "prob_up_1d": 0.53,
-  "prob_up_5d": 0.581,
-  "expected_return": 0.0205,
-  "expected_drawdown": -0.0289,
-  "reward_risk_ratio": 0.7086,
-  "atr_pct": 0.0404,
-  "setup_type": "range_middle",
-  "setup_explanation": "20日線乖離8.3%・RSI=59と方向感に乏しい。明確なブレイクを待つ。",
-  "confidence": "high",
-  "confidence_explanation": "AUC=0.804 — モデル精度が高い、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい",
-  "execution": {
-    "execution_style": "5日線まで待つ",
-    "entry_zone": "5日線タッチ or 20日線上での方向感確認後",
-    "stop_candidate": "直近安値 or -1ATR(4.0%)",
-    "take_profit_candidate": "直近高値 or +6.1%"
-  },
-  "composite_score": 29.7,
-  "model_auc": 0.804,
-  "invalid_if": "直近安値 or -1ATR(4.0%)",
-  "entry_zone": "5日線タッチ or 20日線上での方向感確認後",
-  "skip_reasons": [],
-  "reasoning": [
-    "20日線を8.3%上回りトレンド継続中",
-    "50日線からも7.3%上方（長期上昇継続）",
-    "MACDヒストグラム陽転（短期上昇モメンタム）",
-    "S&amp;P500が5日で4.5%上昇 — 地合い良好",
-    "SOXが20日で22.2%上昇 — 半導体セクター強い"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-04-30"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>2. 9984.T — ソフトバンクG</h3>
-<p><strong>セットアップ</strong>: overbought_risk | <strong>信頼度</strong>: ★★★ | <strong>モデルAUC</strong>: 0.698 ⚠️ 20日線からの乖離が大きく平均回帰リスク</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>4,527.0</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[██████████████░░░░░░] 71%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[███████████░░░░░░░░░] 57%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[█████████████░░░░░░░] 67%</th></tr>
-<tr><td>期待リターン</td><td>+1.80%</td></tr>
-<tr><td>期待ドローダウン</td><td>-4.77%</td></tr>
-<tr><td>RSI (14)</td><td>64.6</td></tr>
-<tr><th>ATR (%)</th><th>5.5%</th></tr>
-<tr><td>20日線乖離</td><td>+17.5%</td></tr>
-<tr><td>出来高比</td><td>0.87x</td></tr>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 58.7</span><span class="pill">20日乖離 +8.3%</span><span class="pill">出来高比 0.95x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#2</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">9984.T</span> <span style="color:#8b949e">ソフトバンクG</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#3fb95020;color:#3fb950;border:1px solid #3fb950">信頼度 高</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: BB%=0.99 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">71%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:71%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">29%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:29%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">+1.8%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-4.8%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.38x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
 </table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 過熱解消（RSI60以下）まで待つ</p>
-<p><strong>無効化条件</strong>: —</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.698 — モデル精度が高い、OOFサンプル=121 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<div class="warn-box">⚠ 見送り理由: 20日線からの乖離が大きく平均回帰リスク</div>
+<ul class="reasons">
 <li>20日線を17.5%上回りトレンド継続中</li>
 <li>50日線からも14.2%上方（長期上昇継続）</li>
 <li>RSI 65 — 強い勢い継続中</li>
 <li>MACDヒストグラム拡大中（買い勢い加速）</li>
 <li>直近5日で19.8%上昇（モメンタム強い）</li>
 <li>ボリンジャー上限付近（過熱感）</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "9984.T",
-  "horizon": "3d",
-  "close": 4527.0,
-  "prob_up": 0.709,
-  "prob_down": 0.291,
-  "prob_up_1d": 0.572,
-  "prob_up_5d": 0.669,
-  "expected_return": 0.018,
-  "expected_drawdown": -0.0477,
-  "reward_risk_ratio": 0.3773,
-  "atr_pct": 0.0549,
-  "setup_type": "overbought_risk",
-  "setup_explanation": "過熱圏: BB%=0.99 (上限超え)。短期的な調整リスクが高い。",
-  "confidence": "high",
-  "confidence_explanation": "AUC=0.698 — モデル精度が高い、OOFサンプル=121 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい",
-  "execution": {
-    "execution_style": "見送り",
-    "entry_zone": "過熱解消（RSI60以下）まで待つ",
-    "stop_candidate": "—",
-    "take_profit_candidate": "—"
-  },
-  "composite_score": 16.42,
-  "model_auc": 0.698,
-  "invalid_if": "—",
-  "entry_zone": "過熱解消（RSI60以下）まで待つ",
-  "skip_reasons": [
-    "20日線からの乖離が大きく平均回帰リスク"
-  ],
-  "reasoning": [
-    "20日線を17.5%上回りトレンド継続中",
-    "50日線からも14.2%上方（長期上昇継続）",
-    "RSI 65 — 強い勢い継続中",
-    "MACDヒストグラム拡大中（買い勢い加速）",
-    "直近5日で19.8%上昇（モメンタム強い）",
-    "ボリンジャー上限付近（過熱感）"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-05-13"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>3. 6098.T — リクルートHD</h3>
-<p><strong>セットアップ</strong>: overbought_risk | <strong>信頼度</strong>: ★★☆ | <strong>モデルAUC</strong>: 0.526</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>7,524.0</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[████████████░░░░░░░░] 63%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[███████░░░░░░░░░░░░░] 40%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[███████████░░░░░░░░░] 55%</th></tr>
-<tr><td>期待リターン</td><td>-0.12%</td></tr>
-<tr><td>期待ドローダウン</td><td>-2.51%</td></tr>
-<tr><td>RSI (14)</td><td>64.8</td></tr>
-<tr><th>ATR (%)</th><th>3.2%</th></tr>
-<tr><td>20日線乖離</td><td>+9.4%</td></tr>
-<tr><td>出来高比</td><td>1.19x</td></tr>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 64.6</span><span class="pill">20日乖離 +17.5%</span><span class="pill">出来高比 0.87x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#3</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">4063.T</span> <span style="color:#8b949e">信越化学工業</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#3fb95020;color:#3fb950;border:1px solid #3fb950">信頼度 高</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: BB%=0.92 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">60%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:60%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">40%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:40%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">+2.3%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-2.9%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.79x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
 </table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 過熱解消（RSI60以下）まで待つ</p>
-<p><strong>無効化条件</strong>: —</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
-<li>20日線を9.4%上回りトレンド継続中</li>
-<li>50日線からも11.7%上方（長期上昇継続）</li>
-<li>RSI 65 — 強い勢い継続中</li>
-<li>MACDヒストグラム拡大中（買い勢い加速）</li>
-<li>直近5日で5.7%上昇（モメンタム強い）</li>
-<li>ボリンジャー上限付近（過熱感）</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "6098.T",
-  "horizon": "3d",
-  "close": 7524.0,
-  "prob_up": 0.629,
-  "prob_down": 0.371,
-  "prob_up_1d": 0.399,
-  "prob_up_5d": 0.554,
-  "expected_return": -0.0012,
-  "expected_drawdown": -0.0251,
-  "reward_risk_ratio": 0.0478,
-  "atr_pct": 0.0317,
-  "setup_type": "overbought_risk",
-  "setup_explanation": "過熱圏: BB%=0.93 (上限超え)。短期的な調整リスクが高い。",
-  "confidence": "medium",
-  "confidence_explanation": "AUC=0.526 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい",
-  "execution": {
-    "execution_style": "見送り",
-    "entry_zone": "過熱解消（RSI60以下）まで待つ",
-    "stop_candidate": "—",
-    "take_profit_candidate": "—"
-  },
-  "composite_score": 2.45,
-  "model_auc": 0.526,
-  "invalid_if": "—",
-  "entry_zone": "過熱解消（RSI60以下）まで待つ",
-  "skip_reasons": [],
-  "reasoning": [
-    "20日線を9.4%上回りトレンド継続中",
-    "50日線からも11.7%上方（長期上昇継続）",
-    "RSI 65 — 強い勢い継続中",
-    "MACDヒストグラム拡大中（買い勢い加速）",
-    "直近5日で5.7%上昇（モメンタム強い）",
-    "ボリンジャー上限付近（過熱感）"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-05-15"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>4. SMCI — Super Micro</h3>
-<p><strong>セットアップ</strong>: overbought_risk | <strong>信頼度</strong>: ★★☆ | <strong>モデルAUC</strong>: 0.511 ⚠️ 出来高が極端に少ない（流動性懸念） / 20日線からの乖離が大きく平均回帰リスク</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>28.56</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[████████████░░░░░░░░] 63%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[██████░░░░░░░░░░░░░░] 33%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[████████░░░░░░░░░░░░] 44%</th></tr>
-<tr><td>期待リターン</td><td>-1.08%</td></tr>
-<tr><td>期待ドローダウン</td><td>-5.85%</td></tr>
-<tr><td>RSI (14)</td><td>58.9</td></tr>
-<tr><th>ATR (%)</th><th>5.4%</th></tr>
-<tr><td>20日線乖離</td><td>+20.0%</td></tr>
-<tr><td>出来高比</td><td>0.43x</td></tr>
-</table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 過熱解消（RSI60以下）まで待つ</p>
-<p><strong>無効化条件</strong>: —</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
-<li>20日線を20.0%上回りトレンド継続中</li>
-<li>50日線からも0.1%上方（長期上昇継続）</li>
-<li>MACDヒストグラム拡大中（買い勢い加速）</li>
-<li>直近5日で13.1%上昇（モメンタム強い）</li>
-<li>出来高が平均以下（動き乏しい）</li>
-<li>ボリンジャー上限付近（過熱感）</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "SMCI",
-  "horizon": "3d",
-  "close": 28.56,
-  "prob_up": 0.628,
-  "prob_down": 0.372,
-  "prob_up_1d": 0.326,
-  "prob_up_5d": 0.443,
-  "expected_return": -0.0108,
-  "expected_drawdown": -0.0585,
-  "reward_risk_ratio": 0.1851,
-  "atr_pct": 0.0544,
-  "setup_type": "overbought_risk",
-  "setup_explanation": "過熱圏: BB%=0.99 (上限超え)。短期的な調整リスクが高い。",
-  "confidence": "medium",
-  "confidence_explanation": "AUC=0.511 — ランダムに近い精度（低評価）、OOFサンプル=193 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい",
-  "execution": {
-    "execution_style": "見送り",
-    "entry_zone": "過熱解消（RSI60以下）まで待つ",
-    "stop_candidate": "—",
-    "take_profit_candidate": "—"
-  },
-  "composite_score": 3.07,
-  "model_auc": 0.511,
-  "invalid_if": "—",
-  "entry_zone": "過熱解消（RSI60以下）まで待つ",
-  "skip_reasons": [
-    "出来高が極端に少ない（流動性懸念）",
-    "20日線からの乖離が大きく平均回帰リスク"
-  ],
-  "reasoning": [
-    "20日線を20.0%上回りトレンド継続中",
-    "50日線からも0.1%上方（長期上昇継続）",
-    "MACDヒストグラム拡大中（買い勢い加速）",
-    "直近5日で13.1%上昇（モメンタム強い）",
-    "出来高が平均以下（動き乏しい）",
-    "ボリンジャー上限付近（過熱感）"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-05-06"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>5. 8306.T — 三菱UFJ FG</h3>
-<p><strong>セットアップ</strong>: レンジ中間 | <strong>信頼度</strong>: ★★☆ | <strong>モデルAUC</strong>: 0.558</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>2,870.0</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[████████████░░░░░░░░] 62%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[███████░░░░░░░░░░░░░] 36%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[████████████░░░░░░░░] 63%</th></tr>
-<tr><td>期待リターン</td><td>+0.44%</td></tr>
-<tr><td>期待ドローダウン</td><td>-1.61%</td></tr>
-<tr><td>RSI (14)</td><td>56.6</td></tr>
-<tr><th>ATR (%)</th><th>2.6%</th></tr>
-<tr><td>20日線乖離</td><td>+3.8%</td></tr>
-<tr><td>出来高比</td><td>1.03x</td></tr>
-</table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 5日線タッチ or 20日線上での方向感確認後</p>
-<p><strong>無効化条件</strong>: 直近安値 or -1ATR(2.6%)</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
-<li>20日線を3.8%上回りトレンド継続中</li>
-<li>50日線からも3.2%上方（長期上昇継続）</li>
-<li>MACDヒストグラム陽転（短期上昇モメンタム）</li>
-<li>S&P500が5日で4.5%上昇 — 地合い良好</li>
-<li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "8306.T",
-  "horizon": "3d",
-  "close": 2870.0,
-  "prob_up": 0.619,
-  "prob_down": 0.381,
-  "prob_up_1d": 0.36,
-  "prob_up_5d": 0.633,
-  "expected_return": 0.0044,
-  "expected_drawdown": -0.0161,
-  "reward_risk_ratio": 0.2713,
-  "atr_pct": 0.0265,
-  "setup_type": "range_middle",
-  "setup_explanation": "20日線乖離3.8%・RSI=57と方向感に乏しい。明確なブレイクを待つ。",
-  "confidence": "medium",
-  "confidence_explanation": "AUC=0.558 — 中程度の精度、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい",
-  "execution": {
-    "execution_style": "5日線まで待つ",
-    "entry_zone": "5日線タッチ or 20日線上での方向感確認後",
-    "stop_candidate": "直近安値 or -1ATR(2.6%)",
-    "take_profit_candidate": "直近高値 or +4.0%"
-  },
-  "composite_score": 8.61,
-  "model_auc": 0.558,
-  "invalid_if": "直近安値 or -1ATR(2.6%)",
-  "entry_zone": "5日線タッチ or 20日線上での方向感確認後",
-  "skip_reasons": [],
-  "reasoning": [
-    "20日線を3.8%上回りトレンド継続中",
-    "50日線からも3.2%上方（長期上昇継続）",
-    "MACDヒストグラム陽転（短期上昇モメンタム）",
-    "S&amp;P500が5日で4.5%上昇 — 地合い良好",
-    "SOXが20日で22.2%上昇 — 半導体セクター強い"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-05-15"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>6. 2413.T — エムスリー</h3>
-<p><strong>セットアップ</strong>: レンジ中間 | <strong>信頼度</strong>: ★☆☆ | <strong>モデルAUC</strong>: 0.464</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>1,578.5</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[████████████░░░░░░░░] 62%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[██████░░░░░░░░░░░░░░] 33%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[█████████░░░░░░░░░░░] 45%</th></tr>
-<tr><td>期待リターン</td><td>-2.04%</td></tr>
-<tr><td>期待ドローダウン</td><td>-4.51%</td></tr>
-<tr><td>RSI (14)</td><td>42.9</td></tr>
-<tr><th>ATR (%)</th><th>3.3%</th></tr>
-<tr><td>20日線乖離</td><td>-1.9%</td></tr>
-<tr><td>出来高比</td><td>1.38x</td></tr>
-</table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 5日線タッチ or 20日線上での方向感確認後</p>
-<p><strong>無効化条件</strong>: 直近安値 or -1ATR(3.3%)</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
-<li>MACDヒストグラム縮小中（売り圧力）</li>
-<li>S&P500が5日で4.5%上昇 — 地合い良好</li>
-<li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "2413.T",
-  "horizon": "3d",
-  "close": 1578.5,
-  "prob_up": 0.618,
-  "prob_down": 0.382,
-  "prob_up_1d": 0.332,
-  "prob_up_5d": 0.454,
-  "expected_return": -0.0204,
-  "expected_drawdown": -0.0451,
-  "reward_risk_ratio": 0.4523,
-  "atr_pct": 0.0328,
-  "setup_type": "range_middle",
-  "setup_explanation": "20日線乖離-1.9%・RSI=43と方向感に乏しい。明確なブレイクを待つ。",
-  "confidence": "low",
-  "confidence_explanation": "AUC=0.464 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい",
-  "execution": {
-    "execution_style": "5日線まで待つ",
-    "entry_zone": "5日線タッチ or 20日線上での方向感確認後",
-    "stop_candidate": "直近安値 or -1ATR(3.3%)",
-    "take_profit_candidate": "直近高値 or +4.9%"
-  },
-  "composite_score": 1.26,
-  "model_auc": 0.464,
-  "invalid_if": "直近安値 or -1ATR(3.3%)",
-  "entry_zone": "5日線タッチ or 20日線上での方向感確認後",
-  "skip_reasons": [],
-  "reasoning": [
-    "MACDヒストグラム縮小中（売り圧力）",
-    "S&amp;P500が5日で4.5%上昇 — 地合い良好",
-    "SOXが20日で22.2%上昇 — 半導体セクター強い"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-05-01"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>7. 4063.T — 信越化学工業</h3>
-<p><strong>セットアップ</strong>: overbought_risk | <strong>信頼度</strong>: ★★★ | <strong>モデルAUC</strong>: 0.585</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>6,907.0</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[████████████░░░░░░░░] 60%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[████████░░░░░░░░░░░░] 44%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[██████████░░░░░░░░░░] 50%</th></tr>
-<tr><td>期待リターン</td><td>+2.32%</td></tr>
-<tr><td>期待ドローダウン</td><td>-2.94%</td></tr>
-<tr><td>RSI (14)</td><td>68.3</td></tr>
-<tr><th>ATR (%)</th><th>2.9%</th></tr>
-<tr><td>20日線乖離</td><td>+7.0%</td></tr>
-<tr><td>出来高比</td><td>0.92x</td></tr>
-</table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 過熱解消（RSI60以下）まで待つ</p>
-<p><strong>無効化条件</strong>: —</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.585 — 中程度の精度、OOFサンプル=121 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<ul class="reasons">
 <li>20日線を7.0%上回りトレンド継続中</li>
 <li>50日線からも13.2%上方（長期上昇継続）</li>
 <li>RSI 68 — 強い勢い継続中</li>
 <li>MACDヒストグラム拡大中（買い勢い加速）</li>
 <li>直近5日で5.4%上昇（モメンタム強い）</li>
 <li>ボリンジャー上限付近（過熱感）</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "4063.T",
-  "horizon": "3d",
-  "close": 6907.0,
-  "prob_up": 0.602,
-  "prob_down": 0.398,
-  "prob_up_1d": 0.436,
-  "prob_up_5d": 0.5,
-  "expected_return": 0.0232,
-  "expected_drawdown": -0.0294,
-  "reward_risk_ratio": 0.7864,
-  "atr_pct": 0.0294,
-  "setup_type": "overbought_risk",
-  "setup_explanation": "過熱圏: BB%=0.92 (上限超え)。短期的な調整リスクが高い。",
-  "confidence": "high",
-  "confidence_explanation": "AUC=0.585 — 中程度の精度、OOFサンプル=121 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい",
-  "execution": {
-    "execution_style": "見送り",
-    "entry_zone": "過熱解消（RSI60以下）まで待つ",
-    "stop_candidate": "—",
-    "take_profit_candidate": "—"
-  },
-  "composite_score": 13.7,
-  "model_auc": 0.585,
-  "invalid_if": "—",
-  "entry_zone": "過熱解消（RSI60以下）まで待つ",
-  "skip_reasons": [],
-  "reasoning": [
-    "20日線を7.0%上回りトレンド継続中",
-    "50日線からも13.2%上方（長期上昇継続）",
-    "RSI 68 — 強い勢い継続中",
-    "MACDヒストグラム拡大中（買い勢い加速）",
-    "直近5日で5.4%上昇（モメンタム強い）",
-    "ボリンジャー上限付近（過熱感）"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-04-28"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>8. 6367.T — ダイキン工業</h3>
-<p><strong>セットアップ</strong>: overbought_risk | <strong>信頼度</strong>: ★★☆ | <strong>モデルAUC</strong>: 0.533</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>21,315.0</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[███████████░░░░░░░░░] 57%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[██████░░░░░░░░░░░░░░] 32%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[████████░░░░░░░░░░░░] 43%</th></tr>
-<tr><td>期待リターン</td><td>+0.92%</td></tr>
-<tr><td>期待ドローダウン</td><td>-2.55%</td></tr>
-<tr><td>RSI (14)</td><td>59.9</td></tr>
-<tr><th>ATR (%)</th><th>4.0%</th></tr>
-<tr><td>20日線乖離</td><td>+7.0%</td></tr>
-<tr><td>出来高比</td><td>1.16x</td></tr>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 68.3</span><span class="pill">20日乖離 +7.0%</span><span class="pill">出来高比 0.92x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#4</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">8306.T</span> <span style="color:#8b949e">三菱UFJ FG</span></div>
+<div><span class="pill" style="color:#58a6ff;border-color:#58a6ff40">レンジ中間（方向感なし）</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">20日線乖離3.8%・RSI=57と方向感に乏しい。明確なブレイクを待つ。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">62%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:62%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">38%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:38%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">+0.4%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-1.6%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.27x</span></div></div>
+<span class="exec-tag" style="background:#79c0ff22;color:#79c0ff;border:1px solid #79c0ff40">5日線まで待つ</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">5日線タッチ or 20日線上での方向感確認後</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">直近安値 or -1ATR(2.6%)</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">直近高値 or +4.0%</td></tr>
 </table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 過熱解消（RSI60以下）まで待つ</p>
-<p><strong>無効化条件</strong>: —</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
+<p style="font-size:12px;margin-top:8px"><span style="color:#d29922">⚠ 無効化条件: </span>直近安値 or -1ATR(2.6%)</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.558 — 中程度の精度、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい</p>
+<ul class="reasons">
+<li>20日線を3.8%上回りトレンド継続中</li>
+<li>50日線からも3.2%上方（長期上昇継続）</li>
+<li>MACDヒストグラム陽転（短期上昇モメンタム）</li>
+<li>S&amp;P500が5日で4.5%上昇 — 地合い良好</li>
+<li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 56.6</span><span class="pill">20日乖離 +3.8%</span><span class="pill">出来高比 1.03x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#5</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">6367.T</span> <span style="color:#8b949e">ダイキン工業</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: BB%=0.90 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">57%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:57%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">42%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:42%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">+0.9%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-2.5%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.36x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
+</table>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.533 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<ul class="reasons">
 <li>20日線を7.0%上回りトレンド継続中</li>
 <li>50日線からも9.1%上方（長期上昇継続）</li>
 <li>MACDヒストグラム陽転（短期上昇モメンタム）</li>
 <li>ボリンジャー上限付近（過熱感）</li>
-<li>S&P500が5日で4.5%上昇 — 地合い良好</li>
+<li>S&amp;P500が5日で4.5%上昇 — 地合い良好</li>
 <li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "6367.T",
-  "horizon": "3d",
-  "close": 21315.0,
-  "prob_up": 0.575,
-  "prob_down": 0.425,
-  "prob_up_1d": 0.319,
-  "prob_up_5d": 0.431,
-  "expected_return": 0.0092,
-  "expected_drawdown": -0.0255,
-  "reward_risk_ratio": 0.3616,
-  "atr_pct": 0.0396,
-  "setup_type": "overbought_risk",
-  "setup_explanation": "過熱圏: BB%=0.90 (上限超え)。短期的な調整リスクが高い。",
-  "confidence": "medium",
-  "confidence_explanation": "AUC=0.533 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい",
-  "execution": {
-    "execution_style": "見送り",
-    "entry_zone": "過熱解消（RSI60以下）まで待つ",
-    "stop_candidate": "—",
-    "take_profit_candidate": "—"
-  },
-  "composite_score": 6.41,
-  "model_auc": 0.533,
-  "invalid_if": "—",
-  "entry_zone": "過熱解消（RSI60以下）まで待つ",
-  "skip_reasons": [],
-  "reasoning": [
-    "20日線を7.0%上回りトレンド継続中",
-    "50日線からも9.1%上方（長期上昇継続）",
-    "MACDヒストグラム陽転（短期上昇モメンタム）",
-    "ボリンジャー上限付近（過熱感）",
-    "S&amp;P500が5日で4.5%上昇 — 地合い良好",
-    "SOXが20日で22.2%上昇 — 半導体セクター強い"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-05-12"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>9. 9983.T — ファーストリテイリング</h3>
-<p><strong>セットアップ</strong>: trend_pullback | <strong>信頼度</strong>: ★★☆ | <strong>モデルAUC</strong>: 0.476</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>74,050.0</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[███████████░░░░░░░░░] 57%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[████████░░░░░░░░░░░░] 42%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[████████████░░░░░░░░] 62%</th></tr>
-<tr><td>期待リターン</td><td>+1.05%</td></tr>
-<tr><td>期待ドローダウン</td><td>-1.84%</td></tr>
-<tr><td>RSI (14)</td><td>70.5</td></tr>
-<tr><th>ATR (%)</th><th>3.0%</th></tr>
-<tr><td>20日線乖離</td><td>+10.7%</td></tr>
-<tr><td>出来高比</td><td>0.86x</td></tr>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 59.9</span><span class="pill">20日乖離 +7.0%</span><span class="pill">出来高比 1.16x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#6</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">META</span> <span style="color:#8b949e">Meta</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: BB%=0.96 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">57%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:57%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">43%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:43%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">+1.9%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-2.5%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.78x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
 </table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 5日線±1ATR(3.0%)の下半分</p>
-<p><strong>無効化条件</strong>: 直近安値 or 5日線を大きく下回った水準</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.555 — 中程度の精度、OOFサンプル=193 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<ul class="reasons">
+<li>20日線を14.1%上回りトレンド継続中</li>
+<li>50日線からも9.4%上方（長期上昇継続）</li>
+<li>RSI 70 — 強い勢い継続中</li>
+<li>MACDヒストグラム拡大中（買い勢い加速）</li>
+<li>直近5日で9.3%上昇（モメンタム強い）</li>
+<li>ボリンジャー上限付近（過熱感）</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 69.8</span><span class="pill">20日乖離 +14.1%</span><span class="pill">出来高比 0.88x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#7</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">SMCI</span> <span style="color:#8b949e">Super Micro</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: BB%=0.99 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">63%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:63%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">37%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:37%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">-1.1%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-5.9%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.19x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
+</table>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.511 — ランダムに近い精度（低評価）、OOFサンプル=193 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<div class="warn-box">⚠ 見送り理由: 出来高が極端に少ない（流動性懸念） / 20日線からの乖離が大きく平均回帰リスク</div>
+<ul class="reasons">
+<li>20日線を20.0%上回りトレンド継続中</li>
+<li>50日線からも0.1%上方（長期上昇継続）</li>
+<li>MACDヒストグラム拡大中（買い勢い加速）</li>
+<li>直近5日で13.1%上昇（モメンタム強い）</li>
+<li>出来高が平均以下（動き乏しい）</li>
+<li>ボリンジャー上限付近（過熱感）</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 58.9</span><span class="pill">20日乖離 +20.0%</span><span class="pill">出来高比 0.43x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#8</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">6098.T</span> <span style="color:#8b949e">リクルートHD</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: BB%=0.93 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">63%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:63%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">37%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:37%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">-0.1%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-2.5%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.05x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
+</table>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.526 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<ul class="reasons">
+<li>20日線を9.4%上回りトレンド継続中</li>
+<li>50日線からも11.7%上方（長期上昇継続）</li>
+<li>RSI 65 — 強い勢い継続中</li>
+<li>MACDヒストグラム拡大中（買い勢い加速）</li>
+<li>直近5日で5.7%上昇（モメンタム強い）</li>
+<li>ボリンジャー上限付近（過熱感）</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 64.8</span><span class="pill">20日乖離 +9.4%</span><span class="pill">出来高比 1.19x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#9</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">9983.T</span> <span style="color:#8b949e">ファーストリテイリング</span></div>
+<div><span class="pill" style="color:#58a6ff;border-color:#58a6ff40">上昇トレンド押し目</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">20日線を10.7%上回る上昇トレンド中、直近5日で-2.0%調整。押し目買いの形。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">57%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:57%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">43%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:43%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">+1.1%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-1.8%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.57x</span></div></div>
+<span class="exec-tag" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95040">押し目待ち</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">5日線±1ATR(3.0%)の下半分</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">直近安値 or 5日線を大きく下回った水準</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">直近高値 or +7.4%</td></tr>
+</table>
+<p style="font-size:12px;margin-top:8px"><span style="color:#d29922">⚠ 無効化条件: </span>直近安値 or 5日線を大きく下回った水準</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.476 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(trend_pullback)が明確で判断しやすい</p>
+<ul class="reasons">
 <li>20日線を10.7%上回りトレンド継続中</li>
 <li>50日線からも11.8%上方（長期上昇継続）</li>
 <li>RSI 70 — 過熱感あり、注意</li>
 <li>MACDヒストグラム陽転（短期上昇モメンタム）</li>
-<li>S&P500が5日で4.5%上昇 — 地合い良好</li>
+<li>S&amp;P500が5日で4.5%上昇 — 地合い良好</li>
 <li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "9983.T",
-  "horizon": "3d",
-  "close": 74050.0,
-  "prob_up": 0.574,
-  "prob_down": 0.426,
-  "prob_up_1d": 0.419,
-  "prob_up_5d": 0.621,
-  "expected_return": 0.0105,
-  "expected_drawdown": -0.0184,
-  "reward_risk_ratio": 0.569,
-  "atr_pct": 0.0295,
-  "setup_type": "trend_pullback",
-  "setup_explanation": "20日線を10.7%上回る上昇トレンド中、直近5日で-2.0%調整。押し目買いの形。",
-  "confidence": "medium",
-  "confidence_explanation": "AUC=0.476 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(trend_pullback)が明確で判断しやすい",
-  "execution": {
-    "execution_style": "押し目待ち",
-    "entry_zone": "5日線±1ATR(3.0%)の下半分",
-    "stop_candidate": "直近安値 or 5日線を大きく下回った水準",
-    "take_profit_candidate": "直近高値 or +7.4%"
-  },
-  "composite_score": 1.56,
-  "model_auc": 0.476,
-  "invalid_if": "直近安値 or 5日線を大きく下回った水準",
-  "entry_zone": "5日線±1ATR(3.0%)の下半分",
-  "skip_reasons": [],
-  "reasoning": [
-    "20日線を10.7%上回りトレンド継続中",
-    "50日線からも11.8%上方（長期上昇継続）",
-    "RSI 70 — 過熱感あり、注意",
-    "MACDヒストグラム陽転（短期上昇モメンタム）",
-    "S&amp;P500が5日で4.5%上昇 — 地合い良好",
-    "SOXが20日で22.2%上昇 — 半導体セクター強い"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-07-09"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h3>10. 6758.T — ソニーグループ</h3>
-<p><strong>セットアップ</strong>: レンジ中間 | <strong>信頼度</strong>: ★★☆ | <strong>モデルAUC</strong>: 0.568</p>
-<br>
-<table>
-<tr><th>指標</th><th>値</th></tr>
-<tr><td>現在値</td><td>3,395.0</td></tr>
-<tr><td>上昇確率 (3日)</td><td>[███████████░░░░░░░░░] 57%</td></tr>
-<tr><td>上昇確率 (翌日)</td><td>[███████░░░░░░░░░░░░░] 36%</td></tr>
-<tr><th>上昇確率 (5日)</th><th>[█████████░░░░░░░░░░░] 49%</th></tr>
-<tr><td>期待リターン</td><td>-0.01%</td></tr>
-<tr><td>期待ドローダウン</td><td>-2.07%</td></tr>
-<tr><td>RSI (14)</td><td>54.5</td></tr>
-<tr><th>ATR (%)</th><th>2.5%</th></tr>
-<tr><td>20日線乖離</td><td>+3.1%</td></tr>
-<tr><td>出来高比</td><td>1.01x</td></tr>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 70.5</span><span class="pill">20日乖離 +10.7%</span><span class="pill">出来高比 0.86x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#10</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">2413.T</span> <span style="color:#8b949e">エムスリー</span></div>
+<div><span class="pill" style="color:#58a6ff;border-color:#58a6ff40">レンジ中間（方向感なし）</span> <span class="badge" style="background:#f8514920;color:#f85149;border:1px solid #f85149">信頼度 低</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">20日線乖離-1.9%・RSI=43と方向感に乏しい。明確なブレイクを待つ。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">62%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:62%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">38%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:38%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">-2.0%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-4.5%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.45x</span></div></div>
+<span class="exec-tag" style="background:#79c0ff22;color:#79c0ff;border:1px solid #79c0ff40">5日線まで待つ</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">5日線タッチ or 20日線上での方向感確認後</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">直近安値 or -1ATR(3.3%)</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">直近高値 or +4.9%</td></tr>
 </table>
-<br>
-<p><strong>推奨エントリーゾーン</strong>: 5日線タッチ or 20日線上での方向感確認後</p>
-<p><strong>無効化条件</strong>: 直近安値 or -1ATR(2.5%)</p>
-<br>
-<p><strong>予測根拠</strong>:</p>
+<p style="font-size:12px;margin-top:8px"><span style="color:#d29922">⚠ 無効化条件: </span>直近安値 or -1ATR(3.3%)</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.464 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい</p>
+<ul class="reasons">
+<li>MACDヒストグラム縮小中（売り圧力）</li>
+<li>S&amp;P500が5日で4.5%上昇 — 地合い良好</li>
+<li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 42.9</span><span class="pill">20日乖離 -1.9%</span><span class="pill">出来高比 1.38x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#11</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">6758.T</span> <span style="color:#8b949e">ソニーグループ</span></div>
+<div><span class="pill" style="color:#58a6ff;border-color:#58a6ff40">レンジ中間（方向感なし）</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">20日線乖離3.1%・RSI=54と方向感に乏しい。明確なブレイクを待つ。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">57%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:57%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">43%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:43%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">-0.0%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-2.1%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.00x</span></div></div>
+<span class="exec-tag" style="background:#79c0ff22;color:#79c0ff;border:1px solid #79c0ff40">5日線まで待つ</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">5日線タッチ or 20日線上での方向感確認後</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">直近安値 or -1ATR(2.5%)</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">直近高値 or +3.7%</td></tr>
+</table>
+<p style="font-size:12px;margin-top:8px"><span style="color:#d29922">⚠ 無効化条件: </span>直近安値 or -1ATR(2.5%)</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.568 — 中程度の精度、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい</p>
+<ul class="reasons">
 <li>20日線を3.1%上回りトレンド継続中</li>
 <li>50日線からも0.8%上方（長期上昇継続）</li>
 <li>MACDヒストグラム拡大中（買い勢い加速）</li>
-<li>S&P500が5日で4.5%上昇 — 地合い良好</li>
+<li>S&amp;P500が5日で4.5%上昇 — 地合い良好</li>
 <li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
-<br>
-<details><summary>構造化データ (JSON)</summary>
-<br>
-<pre class="code json"><code>
-{
-  "ticker": "6758.T",
-  "horizon": "3d",
-  "close": 3395.0,
-  "prob_up": 0.568,
-  "prob_down": 0.432,
-  "prob_up_1d": 0.356,
-  "prob_up_5d": 0.491,
-  "expected_return": -0.0001,
-  "expected_drawdown": -0.0207,
-  "reward_risk_ratio": 0.0026,
-  "atr_pct": 0.025,
-  "setup_type": "range_middle",
-  "setup_explanation": "20日線乖離3.1%・RSI=54と方向感に乏しい。明確なブレイクを待つ。",
-  "confidence": "medium",
-  "confidence_explanation": "AUC=0.568 — 中程度の精度、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい",
-  "execution": {
-    "execution_style": "5日線まで待つ",
-    "entry_zone": "5日線タッチ or 20日線上での方向感確認後",
-    "stop_candidate": "直近安値 or -1ATR(2.5%)",
-    "take_profit_candidate": "直近高値 or +3.7%"
-  },
-  "composite_score": 0.5,
-  "model_auc": 0.568,
-  "invalid_if": "直近安値 or -1ATR(2.5%)",
-  "entry_zone": "5日線タッチ or 20日線上での方向感確認後",
-  "skip_reasons": [],
-  "reasoning": [
-    "20日線を3.1%上回りトレンド継続中",
-    "50日線からも0.8%上方（長期上昇継続）",
-    "MACDヒストグラム拡大中（買い勢い加速）",
-    "S&amp;P500が5日で4.5%上昇 — 地合い良好",
-    "SOXが20日で22.2%上昇 — 半導体セクター強い"
-  ],
-  "earnings_nearby": false,
-  "earnings_date": "2026-05-08"
-}
-</code></pre>
-</details>
-<br>
-<hr>
-<br>
-<h2>売り・様子見候補</h2>
-<br>
-<table>
-<tr><th>銘柄</th><th>上昇確率</th><th>セットアップ</th><th>信頼度</th></tr>
-<tr><td>9432.T NTT</td><td>17%</td><td>レンジ中間</td><td>★★☆</td></tr>
-<tr><td>MSFT Microsoft</td><td>30%</td><td>overbought_risk</td><td>★★☆</td></tr>
-<tr><td>AAPL Apple</td><td>34%</td><td>overbought_risk</td><td>★★☆</td></tr>
-<tr><th>AMZN Amazon</th><th>38%</th><th>overbought_risk</th><th>★★☆</th></tr>
-<tr><td>3382.T セブン&アイHD</td><td>39%</td><td>レンジ中間</td><td>★★★</td></tr>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 54.5</span><span class="pill">20日乖離 +3.1%</span><span class="pill">出来高比 1.01x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#12</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">7974.T</span> <span style="color:#8b949e">任天堂</span></div>
+<div><span class="pill" style="color:#58a6ff;border-color:#58a6ff40">レンジ中間（方向感なし）</span> <span class="badge" style="background:#f8514920;color:#f85149;border:1px solid #f85149">信頼度 低</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">20日線乖離-0.9%・RSI=47と方向感に乏しい。明確なブレイクを待つ。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">56%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:56%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">44%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:44%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">-1.1%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-3.1%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.35x</span></div></div>
+<span class="exec-tag" style="background:#79c0ff22;color:#79c0ff;border:1px solid #79c0ff40">5日線まで待つ</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">5日線タッチ or 20日線上での方向感確認後</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">直近安値 or -1ATR(3.0%)</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">直近高値 or +4.4%</td></tr>
 </table>
-<br>
-<h2>決算発表近接銘柄（予測精度低下に注意）</h2>
-<br>
-<li><strong>6861.T</strong> (キーエンス) — 決算: 2026-04-24</li>
-<li><strong>6954.T</strong> (ファナック) — 決算: 2026-04-24</li>
-<li><strong>TSLA</strong> (Tesla) — 決算: 2026-04-23</li>
-<br>
+<p style="font-size:12px;margin-top:8px"><span style="color:#d29922">⚠ 無効化条件: </span>直近安値 or -1ATR(3.0%)</p>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.498 — ランダムに近い精度（低評価）、OOFサンプル=121 — やや少ない、セットアップ(range_middle)は方向感が乏しい</p>
+<ul class="reasons">
+<li>S&amp;P500が5日で4.5%上昇 — 地合い良好</li>
+<li>SOXが20日で22.2%上昇 — 半導体セクター強い</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 46.7</span><span class="pill">20日乖離 -0.9%</span><span class="pill">出来高比 1.17x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#13</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">NVDA</span> <span style="color:#8b949e">NVIDIA</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: BB%=0.97 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">56%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:56%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">44%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:44%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">+0.2%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-2.9%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.07x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
+</table>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.513 — ランダムに近い精度（低評価）、OOFサンプル=193 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<ul class="reasons">
+<li>20日線を11.2%上回りトレンド継続中</li>
+<li>50日線からも10.0%上方（長期上昇継続）</li>
+<li>RSI 71 — 過熱感あり、注意</li>
+<li>MACDヒストグラム拡大中（買い勢い加速）</li>
+<li>直近5日で6.9%上昇（モメンタム強い）</li>
+<li>ボリンジャー上限付近（過熱感）</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 71.4</span><span class="pill">20日乖離 +11.2%</span><span class="pill">出来高比 0.98x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#14</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">AMD</span> <span style="color:#8b949e">AMD</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: RSI=80 (72超)、BB%=1.00 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">55%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:55%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">45%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:45%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">-0.1%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-5.1%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.01x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
+</table>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.449 — ランダムに近い精度（低評価）、OOFサンプル=193 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<div class="warn-box">⚠ 見送り理由: 20日線からの乖離が大きく平均回帰リスク</div>
+<ul class="reasons">
+<li>20日線を22.8%上回りトレンド継続中</li>
+<li>50日線からも31.2%上方（長期上昇継続）</li>
+<li>RSI 80 — 過熱感あり、注意</li>
+<li>MACDヒストグラム拡大中（買い勢い加速）</li>
+<li>直近5日で13.6%上昇（モメンタム強い）</li>
+<li>ボリンジャー上限付近（過熱感）</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 80.2</span><span class="pill">20日乖離 +22.8%</span><span class="pill">出来高比 0.99x</span></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+<div><span style="font-size:13px;color:#6e7681">#15</span> <span style="font-size:18px;font-weight:700;color:#e6edf3">COIN</span> <span style="color:#8b949e">Coinbase</span></div>
+<div><span class="pill" style="color:#f85149;border-color:#f8514940">過熱リスク</span> <span class="badge" style="background:#d2992220;color:#d29922;border:1px solid #d29922">信頼度 中</span></div>
+</div>
+<p style="font-size:12px;color:#8b949e;margin:6px 0">過熱圏: BB%=1.00 (上限超え)。短期的な調整リスクが高い。</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div><div style="font-size:11px;color:#8b949e">上昇確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#3fb950">55%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:55%;background:#3fb950"></div></div></div>
+<div><div style="font-size:11px;color:#8b949e">下落確率 (3日)</div><div style="margin-bottom:4px"><span style="font-size:16px;font-weight:700;color:#f85149">46%</span></div><div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:46%;background:#f85149"></div></div></div>
+</div>
+<div style="display:flex;gap:16px;margin:8px 0;font-size:13px"><div><span style="color:#8b949e">期待R</span> <span style="color:#3fb950;font-weight:600">-1.0%</span></div><div><span style="color:#8b949e">期待DD</span> <span style="color:#f85149;font-weight:600">-6.4%</span></div><div><span style="color:#8b949e">RR</span> <span style="color:#58a6ff;font-weight:600">0.15x</span></div></div>
+<span class="exec-tag" style="background:#6e768122;color:#6e7681;border:1px solid #6e768140">見送り</span>
+<table style="margin-top:8px">
+<tr><td style="color:#8b949e;width:140px">エントリーゾーン</td><td style="">過熱解消（RSI60以下）まで待つ</td></tr>
+<tr><td style="color:#8b949e;width:140px">ストップ候補</td><td style="color:#f85149">—</td></tr>
+<tr><td style="color:#8b949e;width:140px">利確候補</td><td style="color:#3fb950">—</td></tr>
+</table>
+<p style="font-size:11px;color:#6e7681;margin-top:6px">信頼度根拠: AUC=0.526 — ランダムに近い精度（低評価）、OOFサンプル=193 — やや少ない、セットアップ(overbought_risk)が明確で判断しやすい</p>
+<ul class="reasons">
+<li>20日線を14.7%上回りトレンド継続中</li>
+<li>50日線からも14.5%上方（長期上昇継続）</li>
+<li>RSI 64 — 強い勢い継続中</li>
+<li>MACDヒストグラム拡大中（買い勢い加速）</li>
+<li>直近5日で22.9%上昇（モメンタム強い）</li>
+<li>ボリンジャー上限付近（過熱感）</li>
+</ul>
+<div style="margin-top:10px"><span class="pill">RSI 64.3</span><span class="pill">20日乖離 +14.7%</span><span class="pill">出来高比 1.41x</span></div>
+</div>
+</div>
+<h2>逆張り買い注意（下落確率が高い銘柄）</h2>
+<div class="card">
+<table>
+<tr><th>銘柄</th><th>セットアップ</th><th>下落確率(3d)</th><th>信頼度</th></tr>
+<tr><td><b>9432.T</b> NTT</td><td>レンジ中間（方向感なし）</td><td style="color:#f85149;font-weight:600">83%</td><td style="color:#d29922">medium</td></tr>
+<tr><td><b>MSFT</b> Microsoft</td><td>過熱リスク</td><td style="color:#f85149;font-weight:600">70%</td><td style="color:#d29922">medium</td></tr>
+<tr><td><b>AAPL</b> Apple</td><td>過熱リスク</td><td style="color:#f85149;font-weight:600">66%</td><td style="color:#d29922">medium</td></tr>
+<tr><td><b>AMZN</b> Amazon</td><td>過熱リスク</td><td style="color:#f85149;font-weight:600">62%</td><td style="color:#d29922">medium</td></tr>
+<tr><td><b>3382.T</b> セブン&amp;アイHD</td><td>レンジ中間（方向感なし）</td><td style="color:#f85149;font-weight:600">61%</td><td style="color:#3fb950">high</td></tr>
+<tr><td><b>7203.T</b> トヨタ自動車</td><td>レンジ中間（方向感なし）</td><td style="color:#f85149;font-weight:600">57%</td><td style="color:#d29922">medium</td></tr>
+</table>
+</div>
+<h2>決算近接銘柄（信頼性低下に注意）</h2>
+<div class="warn-box" style="margin-bottom:12px">決算跨ぎ注意: これらの銘柄の通常シグナルは信頼性が低下しています。決算通過後に改めて判断してください。</div>
+<div class="card">
+<table>
+<tr><th>銘柄</th><th>決算日</th><th>決算まで</th><th>上昇確率(3d)</th></tr>
+<tr><td><b>6861.T</b> キーエンス</td><td>2026-04-24</td><td><span style="color:#d29922">—日</span></td><td>46%</td></tr>
+<tr><td><b>6954.T</b> ファナック</td><td>2026-04-24</td><td><span style="color:#d29922">—日</span></td><td>63%</td></tr>
+<tr><td><b>TSLA</b> Tesla</td><td>2026-04-23</td><td><span style="color:#d29922">—日</span></td><td>64%</td></tr>
+</table>
+</div>
 <h2>全銘柄スコア一覧</h2>
-<br>
+<div class="card">
 <table>
-<tr><th>銘柄</th><th>上昇確率3d</th><th>上昇確率1d</th><th>信頼度</th><th>セットアップ</th><th>20日乖離</th><th>RSI</th></tr>
-<tr><td>8035.T</td><td>74%</td><td>53%</td><td>★★★</td><td>レンジ中間</td><td>+8.3%</td><td>59</td></tr>
-<tr><td>9984.T</td><td>71%</td><td>57%</td><td>★★★</td><td>overbought_risk</td><td>+17.5%</td><td>65</td></tr>
-<tr><td>TSLA 📅</td><td>64%</td><td>46%</td><td>★☆☆</td><td>earnings_event_risk</td><td>+8.9%</td><td>60</td></tr>
-<tr><th>6954.T 📅</th><th>63%</th><th>39%</th><th>★☆☆</th><th>earnings_event_risk</th><th>+6.8%</th><th>56</th></tr>
-<tr><td>6098.T</td><td>63%</td><td>40%</td><td>★★☆</td><td>overbought_risk</td><td>+9.4%</td><td>65</td></tr>
-<tr><td>SMCI</td><td>63%</td><td>33%</td><td>★★☆</td><td>overbought_risk</td><td>+20.0%</td><td>59</td></tr>
-<tr><td>8306.T</td><td>62%</td><td>36%</td><td>★★☆</td><td>レンジ中間</td><td>+3.8%</td><td>57</td></tr>
-<tr><th>2413.T</th><th>62%</th><th>33%</th><th>★☆☆</th><th>レンジ中間</th><th>-1.9%</th><th>43</th></tr>
-<tr><td>4063.T</td><td>60%</td><td>44%</td><td>★★★</td><td>overbought_risk</td><td>+7.0%</td><td>68</td></tr>
-<tr><td>6367.T</td><td>57%</td><td>32%</td><td>★★☆</td><td>overbought_risk</td><td>+7.0%</td><td>60</td></tr>
-<tr><td>9983.T</td><td>57%</td><td>42%</td><td>★★☆</td><td>trend_pullback</td><td>+10.7%</td><td>70</td></tr>
-<tr><th>6758.T</th><th>57%</th><th>36%</th><th>★★☆</th><th>レンジ中間</th><th>+3.1%</th><th>54</th></tr>
-<tr><td>META</td><td>57%</td><td>25%</td><td>★★☆</td><td>overbought_risk</td><td>+14.1%</td><td>70</td></tr>
-<tr><td>7974.T</td><td>56%</td><td>42%</td><td>★☆☆</td><td>レンジ中間</td><td>-0.9%</td><td>47</td></tr>
-<tr><td>NVDA</td><td>56%</td><td>40%</td><td>★★☆</td><td>overbought_risk</td><td>+11.2%</td><td>71</td></tr>
-<tr><th>AMD</th><th>55%</th><th>45%</th><th>★★☆</th><th>overbought_risk</th><th>+22.8%</th><th>80</th></tr>
-<tr><td>COIN</td><td>55%</td><td>34%</td><td>★★☆</td><td>overbought_risk</td><td>+14.7%</td><td>64</td></tr>
-<tr><td>GOOGL</td><td>48%</td><td>30%</td><td>★★☆</td><td>overbought_risk</td><td>+11.6%</td><td>73</td></tr>
-<tr><td>6861.T 📅</td><td>46%</td><td>32%</td><td>★☆☆</td><td>earnings_event_risk</td><td>+6.0%</td><td>60</td></tr>
-<tr><th>7203.T</th><th>43%</th><th>32%</th><th>★★☆</th><th>レンジ中間</th><th>+1.4%</th><th>50</th></tr>
-<tr><td>3382.T</td><td>39%</td><td>19%</td><td>★★★</td><td>レンジ中間</td><td>-2.2%</td><td>45</td></tr>
-<tr><td>AMZN</td><td>38%</td><td>28%</td><td>★★☆</td><td>overbought_risk</td><td>+13.2%</td><td>77</td></tr>
-<tr><td>AAPL</td><td>34%</td><td>25%</td><td>★★☆</td><td>overbought_risk</td><td>+5.4%</td><td>64</td></tr>
-<tr><th>MSFT</th><th>30%</th><th>23%</th><th>★★☆</th><th>overbought_risk</th><th>+11.3%</th><th>72</th></tr>
-<tr><td>9432.T</td><td>17%</td><td>15%</td><td>★★☆</td><td>レンジ中間</td><td>-0.7%</td><td>50</td></tr>
+<tr><th>銘柄</th><th>prob_up_3d</th><th>執行スタイル</th><th>セットアップ</th><th>信頼度</th><th>RSI</th><th>20日乖離</th><th>複合スコア</th></tr>
+<tr><td><b>8035.T</b></td><td style="color:#3fb950;font-weight:600">74%</td><td style="color:#79c0ff">5日線まで待つ</td><td>レンジ中間（方向感なし）</td><td style="color:#3fb950">high</td><td>58.7</td><td>+8.3%</td><td style="color:#58a6ff;font-weight:600">30</td></tr>
+<tr><td><b>9984.T</b></td><td style="color:#3fb950;font-weight:600">71%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#3fb950">high</td><td>64.6</td><td>+17.5%</td><td style="color:#58a6ff;font-weight:600">16</td></tr>
+<tr><td><b>4063.T</b></td><td style="color:#3fb950;font-weight:600">60%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#3fb950">high</td><td>68.3</td><td>+7.0%</td><td style="color:#58a6ff;font-weight:600">14</td></tr>
+<tr><td><b>8306.T</b></td><td style="color:#3fb950;font-weight:600">62%</td><td style="color:#79c0ff">5日線まで待つ</td><td>レンジ中間（方向感なし）</td><td style="color:#d29922">medium</td><td>56.6</td><td>+3.8%</td><td style="color:#58a6ff;font-weight:600">9</td></tr>
+<tr><td><b>6367.T</b></td><td style="color:#d29922;font-weight:600">57%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>59.9</td><td>+7.0%</td><td style="color:#58a6ff;font-weight:600">6</td></tr>
+<tr><td><b>META</b></td><td style="color:#d29922;font-weight:600">57%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>69.8</td><td>+14.1%</td><td style="color:#58a6ff;font-weight:600">5</td></tr>
+<tr><td><b>3382.T</b></td><td style="color:#f85149;font-weight:600">39%</td><td style="color:#79c0ff">5日線まで待つ</td><td>レンジ中間（方向感なし）</td><td style="color:#3fb950">high</td><td>45.3</td><td>-2.2%</td><td style="color:#58a6ff;font-weight:600">4</td></tr>
+<tr><td><b>SMCI</b></td><td style="color:#3fb950;font-weight:600">63%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>58.9</td><td>+20.0%</td><td style="color:#58a6ff;font-weight:600">3</td></tr>
+<tr><td><b>6098.T</b></td><td style="color:#3fb950;font-weight:600">63%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>64.8</td><td>+9.4%</td><td style="color:#58a6ff;font-weight:600">2</td></tr>
+<tr><td><b>9983.T</b></td><td style="color:#d29922;font-weight:600">57%</td><td style="color:#3fb950">押し目待ち</td><td>上昇トレンド押し目</td><td style="color:#d29922">medium</td><td>70.5</td><td>+10.7%</td><td style="color:#58a6ff;font-weight:600">2</td></tr>
+<tr><td><b>2413.T</b></td><td style="color:#3fb950;font-weight:600">62%</td><td style="color:#79c0ff">5日線まで待つ</td><td>レンジ中間（方向感なし）</td><td style="color:#f85149">low</td><td>42.9</td><td>-1.9%</td><td style="color:#58a6ff;font-weight:600">1</td></tr>
+<tr><td><b>6758.T</b></td><td style="color:#d29922;font-weight:600">57%</td><td style="color:#79c0ff">5日線まで待つ</td><td>レンジ中間（方向感なし）</td><td style="color:#d29922">medium</td><td>54.5</td><td>+3.1%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>7203.T</b></td><td style="color:#f85149;font-weight:600">43%</td><td style="color:#79c0ff">5日線まで待つ</td><td>レンジ中間（方向感なし）</td><td style="color:#d29922">medium</td><td>49.6</td><td>+1.4%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>6861.T</b> 📅</td><td style="color:#f85149;font-weight:600">46%</td><td style="color:#d29922">決算通過待ち</td><td>決算イベントリスク</td><td style="color:#f85149">low</td><td>60.4</td><td>+6.0%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>9432.T</b></td><td style="color:#f85149;font-weight:600">17%</td><td style="color:#79c0ff">5日線まで待つ</td><td>レンジ中間（方向感なし）</td><td style="color:#d29922">medium</td><td>49.8</td><td>-0.7%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>7974.T</b></td><td style="color:#d29922;font-weight:600">56%</td><td style="color:#79c0ff">5日線まで待つ</td><td>レンジ中間（方向感なし）</td><td style="color:#f85149">low</td><td>46.7</td><td>-0.9%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>6954.T</b> 📅</td><td style="color:#3fb950;font-weight:600">63%</td><td style="color:#d29922">決算通過待ち</td><td>決算イベントリスク</td><td style="color:#f85149">low</td><td>55.7</td><td>+6.8%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>AAPL</b></td><td style="color:#f85149;font-weight:600">34%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>64.2</td><td>+5.4%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>NVDA</b></td><td style="color:#d29922;font-weight:600">56%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>71.4</td><td>+11.2%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>TSLA</b> 📅</td><td style="color:#3fb950;font-weight:600">64%</td><td style="color:#d29922">決算通過待ち</td><td>決算イベントリスク</td><td style="color:#f85149">low</td><td>60.3</td><td>+8.9%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>AMZN</b></td><td style="color:#f85149;font-weight:600">38%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>76.6</td><td>+13.2%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>GOOGL</b></td><td style="color:#f85149;font-weight:600">48%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>72.6</td><td>+11.6%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>MSFT</b></td><td style="color:#f85149;font-weight:600">30%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>71.7</td><td>+11.3%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>AMD</b></td><td style="color:#d29922;font-weight:600">55%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>80.2</td><td>+22.8%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
+<tr><td><b>COIN</b></td><td style="color:#d29922;font-weight:600">55%</td><td style="color:#6e7681">見送り</td><td>過熱リスク</td><td style="color:#d29922">medium</td><td>64.3</td><td>+14.7%</td><td style="color:#58a6ff;font-weight:600">0</td></tr>
 </table>
-<br>
-<p>*生成日時: 2026/04/20 15:09 | データソース: Yahoo Finance*</p>
+</div>
+<h2>データ定義・免責事項</h2>
+<div class="card">
+<div style="margin-bottom:12px"><div style="color:#58a6ff;font-weight:600;margin-bottom:4px">prob_up_3d</div><div style="color:#8b949e;font-size:13px">3日以内に終値ベースで +2% の TP（利確）が -2% の SL（損切）より先に達成される確率。ウォークフォワード学習の OOF（アウトオブフォールド）予測から算出。</div></div>
+<div style="margin-bottom:12px"><div style="color:#58a6ff;font-weight:600;margin-bottom:4px">expected_return_3d</div><div style="color:#8b949e;font-size:13px">OOF データ中で prob &gt;= 0.55 のシグナルが実際に達成した3日後リターンの平均値。モデルの実績ベースの期待値であり、将来リターンを保証するものではない。</div></div>
+<div style="margin-bottom:12px"><div style="color:#58a6ff;font-weight:600;margin-bottom:4px">confidence（信頼度）</div><div style="color:#8b949e;font-size:13px">モデル AUC（精度）・OOF サンプル数・特徴量完全性・決算近接・FOMC 近接・セットアップの明確さを加味した複合評価。high / medium / low の 3 段階。</div></div>
+<div style="margin-bottom:12px"><div style="color:#58a6ff;font-weight:600;margin-bottom:4px">setup_type（セットアップ分類）</div><div style="color:#8b949e;font-size:13px">8 種類: trend_pullback（押し目）/ breakout_ready（ブレイク前夜）/ momentum_extension（モメンタム継続）/ overbought_risk（過熱）/ mean_reversion_candidate（売られすぎ反発）/ earnings_event_risk（決算リスク）/ range_middle（方向感なし）/ failed_breakout_risk（ブレイク失敗）</div></div>
+<div style="margin-bottom:12px"><div style="color:#58a6ff;font-weight:600;margin-bottom:4px">earnings_nearby</div><div style="color:#8b949e;font-size:13px">決算発表日まで 7 営業日以内の銘柄に True が付与される。決算跨ぎは予測精度を大幅に低下させるため、通常シグナルの信頼性が落ちる。</div></div>
+<div style="margin-bottom:12px"><div style="color:#58a6ff;font-weight:600;margin-bottom:4px">免責事項</div><div style="color:#8b949e;font-size:13px">本レポートは機械学習モデルの出力を参考情報として提示するものであり、特定銘柄への投資を推奨・保証するものではありません。投資判断・売買は自己責任でお願いします。</div></div>
+</div>
+</div>
 </body>
 </html>
