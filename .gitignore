@@ -1,0 +1,5 @@
+# 機密情報は絶対に含めない
+*.py
+*.bat
+*.env
+email_config*

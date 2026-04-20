@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>株式分析レポート</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Sans', 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; }
+  header { background: #161b22; border-bottom: 1px solid #30363d; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 18px; color: #58a6ff; }
+  header .ts { font-size: 12px; color: #8b949e; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 20px; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; text-decoration: none; color: inherit; transition: border-color .2s; display: block; }
+  .card:hover { border-color: #58a6ff; }
+  .card-header { padding: 16px 20px 12px; border-bottom: 1px solid #21262d; }
+  .card-header .icon { font-size: 28px; margin-bottom: 8px; }
+  .card-header h2 { font-size: 16px; color: #e6edf3; }
+  .card-header p { font-size: 12px; color: #8b949e; margin-top: 4px; }
+  .card-body { padding: 14px 20px; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-right: 4px; margin-bottom: 4px; }
+  .tag.green { background: #0d4429; color: #3fb950; }
+  .tag.blue  { background: #0c2d6b; color: #58a6ff; }
+  .tag.yellow{ background: #2d2208; color: #e3b341; }
+  .updated { padding: 8px 20px 16px; font-size: 11px; color: #484f58; }
+  iframe { width: 100%; border: none; background: #0d1117; }
+  .notice { margin: 0 20px 20px; padding: 12px 16px; background: #2d2208; border: 1px solid #e3b341; border-radius: 8px; font-size: 12px; color: #e3b341; }
+  footer { text-align: center; padding: 20px; font-size: 11px; color: #484f58; border-top: 1px solid #21262d; margin-top: 20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📈 株式分析レポート</h1>
+  <span class="ts" id="ts">読み込み中...</span>
+</header>
+
+<div class="cards">
+  <a class="card" href="dashboard.html">
+    <div class="card-header">
+      <div class="icon">📊</div>
+      <h2>テクニカル分析ダッシュボード</h2>
+      <p>ローソク足 + RSI + MACD + ボリンジャーバンド</p>
+    </div>
+    <div class="card-body">
+      <span class="tag green">買いシグナル</span>
+      <span class="tag blue">チャート</span>
+      <span class="tag yellow">出来高</span>
+    </div>
+    <div class="updated">インタラクティブなチャートで詳細を確認</div>
+  </a>
+
+  <a class="card" href="report.html">
+    <div class="card-header">
+      <div class="icon">🤖</div>
+      <h2>ML 予測レポート</h2>
+      <p>3日後の上昇確率 + 推奨エントリー条件</p>
+    </div>
+    <div class="card-body">
+      <span class="tag green">上昇確率</span>
+      <span class="tag blue">セットアップ</span>
+      <span class="tag yellow">無効化条件</span>
+    </div>
+    <div class="updated">ウォークフォワード検証済みモデル</div>
+  </a>
+</div>
+
+<div class="notice">
+  ⚠️ このレポートは自動生成された参考情報です。投資判断はご自身の責任でお願いします。
+</div>
+
+<footer>
+  データソース: Yahoo Finance | 毎朝7:30に自動更新
+</footer>
+
+<script>
+  // 最終更新日時を表示
+  fetch('last_updated.txt?t=' + Date.now())
+    .then(r => r.text())
+    .then(t => { document.getElementById('ts').textContent = '最終更新: ' + t.trim(); })
+    .catch(() => { document.getElementById('ts').textContent = ''; });
+</script>
+</body>
+</html>
